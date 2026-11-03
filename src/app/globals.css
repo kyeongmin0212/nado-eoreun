@@ -1,0 +1,487 @@
+@import "tailwindcss";
+
+/* 디자인 최종안(2026-10-30) 토큰 — 기능명세서(최종) 5장 색상표 */
+@theme {
+  --color-coral: #f5a390; /* 포인트 피치 코랄: SOS, 통금 막대, 선택 칩, 알림 숫자 */
+  --color-peach: #fdede8; /* 연피치: 배지·태그·선택 카드·안 읽은 알림 */
+  --color-blush: #f9d9cf; /* 아바타·썸네일 배경 */
+  --color-ink: #8a3a2e; /* 진피치 글자 */
+  --color-rust: #b4574a; /* 진피치 라벨 */
+  --color-petal: #f8b8a8; /* 어두운 화면 위 피치 글자 */
+  --color-dash: #f3c4b7; /* 점선 테두리 */
+  --color-charcoal: #2e2a33; /* 기본 글자, 통금 카드·SOS·편집 화면 배경, 주요 버튼 */
+  --color-dusk: #48424e; /* 어두운 화면 안 카드, 보조 버튼 */
+  --color-warm: #faf8f7; /* 밝은 화면 배경 */
+  --color-cream: #fff6f3; /* 어두운 화면 글자 */
+  --color-mist: #e9dde0; /* 어두운 화면 보조 글자 */
+  --color-sub: #6b6470; /* 보조 글자 */
+  --color-line: #f1e2dd; /* 카드·입력창 테두리 */
+  --color-sage: #9ed0b4; /* SOS-02 실제 동행인 전화 버튼 */
+  --color-sage-ink: #1c4a31;
+  --color-ok-bg: #ddf2e6;
+  --color-ok: #1c5b38;
+  --color-wait-bg: #fff1cc;
+  --color-wait: #6b4a00;
+  --color-end-bg: #ede6f0;
+  --color-end: #4e4556;
+  --color-amber: #ffb547; /* 통금 임박 */
+  --color-danger: #a32d2d;
+  --color-required: #f1e8ee;
+
+  /* 이전 이름(다른 화면 호환) */
+  --color-coral-deep: #b4574a;
+  --color-peach-light: #faf8f7;
+  --color-charcoal-soft: #6b6470;
+  --color-charcoal-2: #48424e;
+
+  --font-sans:
+    "Pretendard Variable", Pretendard, -apple-system, BlinkMacSystemFont, "Apple SD Gothic Neo", "Noto Sans KR",
+    "Segoe UI", Roboto, sans-serif;
+}
+
+:root {
+  color-scheme: light;
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  min-height: 100%;
+}
+/* body 높이를 고정하지 않는다(어두운 화면 배경이 내용 중간에서 잘리지 않게). */
+body {
+  margin: 0;
+  min-height: 100dvh;
+  background: var(--color-warm);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  overscroll-behavior-y: none;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+  word-break: keep-all;
+}
+
+/* 스크롤 바는 배경 없이 얇은 막대만 (디자인 기준) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(46, 42, 51, 0.28) transparent;
+}
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+  background: transparent;
+}
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+::-webkit-scrollbar-thumb {
+  background: rgba(46, 42, 51, 0.28);
+  border-radius: 3px;
+}
+
+.safe-top {
+  padding-top: env(safe-area-inset-top);
+}
+.safe-bottom {
+  padding-bottom: env(safe-area-inset-bottom);
+}
+button,
+a,
+label,
+input,
+textarea,
+select {
+  touch-action: manipulation;
+}
+button {
+  font-family: inherit;
+  cursor: pointer;
+}
+button:disabled {
+  cursor: default;
+}
+
+/* 홈·시작·로그인 상단 그라데이션 (#FDE6DE → #FAF8F7) */
+.bg-hero {
+  background: linear-gradient(180deg, #fde6de 0px, #fcefea 160px, #faf8f7 340px);
+}
+.bg-splash {
+  background: linear-gradient(180deg, #fde6de 0%, #fcefea 45%, #faf8f7 100%);
+}
+
+/* ---------- 애니메이션 ---------- */
+@keyframes noti-drop {
+  from {
+    transform: translateY(-120%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.noti-drop {
+  animation: noti-drop 0.4s cubic-bezier(0.2, 0.8, 0.2, 1) both;
+}
+@keyframes sheet-up {
+  from {
+    transform: translateY(24px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+.sheet-in {
+  animation: sheet-up 220ms ease-out both;
+}
+@keyframes splash-in {
+  from {
+    opacity: 0;
+    transform: scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.splash-in {
+  animation: splash-in 420ms ease-out both;
+}
+.splash-out {
+  opacity: 0;
+  transition: opacity 280ms ease-in;
+}
+@keyframes shimmer {
+  0% {
+    background-position: -200px 0;
+  }
+  100% {
+    background-position: 200px 0;
+  }
+}
+.skeleton {
+  background: linear-gradient(90deg, #f3ebe8 0px, #fbf5f3 80px, #f3ebe8 160px);
+  background-size: 400px 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: 16px;
+}
+.skeleton-dark {
+  background: linear-gradient(90deg, #3a3540 0px, #48424e 80px, #3a3540 160px);
+  background-size: 400px 100%;
+  animation: shimmer 1.2s linear infinite;
+  border-radius: 16px;
+}
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+.spinner {
+  width: 18px;
+  height: 18px;
+  border-radius: 999px;
+  border: 2px solid currentColor;
+  border-right-color: transparent;
+  animation: spin 0.8s linear infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .noti-drop,
+  .sheet-in,
+  .splash-in,
+  .skeleton,
+  .skeleton-dark,
+  .spinner {
+    animation: none;
+  }
+  .splash-out {
+    transition: none;
+  }
+}
+
+/* ---------- 공통 컴포넌트 ---------- */
+.card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 20px;
+}
+.card-dark {
+  background: var(--color-charcoal);
+  color: var(--color-cream);
+  border-radius: 20px;
+}
+.card-dusk {
+  background: var(--color-dusk);
+  color: var(--color-cream);
+  border-radius: 16px;
+}
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 20px;
+  border-radius: 16px;
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  border: 0;
+  transition: transform 120ms ease, opacity 120ms ease;
+}
+.btn:active {
+  transform: scale(0.98);
+}
+.btn:disabled {
+  opacity: 0.45;
+  transform: none;
+}
+.btn-dark {
+  background: var(--color-charcoal);
+  color: var(--color-cream);
+}
+.btn-coral {
+  background: var(--color-coral);
+  color: var(--color-charcoal);
+}
+.btn-white {
+  background: #fff;
+  color: var(--color-charcoal);
+  border: 1px solid var(--color-line);
+  font-weight: 500;
+}
+.btn-dusk {
+  background: var(--color-dusk);
+  color: var(--color-cream);
+}
+.btn-cream {
+  background: var(--color-cream);
+  color: var(--color-charcoal);
+}
+.btn-outline-dark {
+  background: transparent;
+  color: var(--color-cream);
+  border: 1px solid var(--color-sub);
+  font-weight: 500;
+}
+.btn-sage {
+  background: var(--color-sage);
+  color: var(--color-sage-ink);
+  font-weight: 900;
+}
+.pill-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  height: 38px;
+  padding: 0 16px;
+  border-radius: 19px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-charcoal);
+  font-size: 13px;
+}
+.field {
+  width: 100%;
+  height: 46px;
+  padding: 0 14px;
+  border: 1px solid var(--color-line);
+  border-radius: 12px;
+  background: var(--color-warm);
+  color: var(--color-charcoal);
+  font-size: 16px; /* iOS 자동 확대 방지 */
+}
+textarea.field {
+  height: auto;
+  padding: 12px 14px;
+  resize: none;
+  line-height: 1.5;
+}
+.field:focus {
+  outline: 2px solid var(--color-coral);
+  outline-offset: 0;
+}
+/* iOS Safari 의 날짜·시간 입력은 기본 모양 때문에 부모 카드보다 넓게 그려진다(오른쪽으로 삐져나옴).
+   기본 모양을 끄고 폭을 부모에 맞춘다. 값은 왼쪽 정렬. */
+input[type="date"],
+input[type="time"] {
+  -webkit-appearance: none;
+  appearance: none;
+  display: block;
+  min-width: 0;
+  max-width: 100%;
+}
+input[type="date"]::-webkit-date-and-time-value,
+input[type="time"]::-webkit-date-and-time-value {
+  margin: 0;
+  text-align: left;
+}
+/* 기본 모양을 끄면 값이 칸 위쪽에 붙으므로 위아래 여백으로 가운데에 둔다 (11 + 22 + 11 + 테두리 2 = 46px) */
+.field[type="date"],
+.field[type="time"] {
+  padding-top: 11px;
+  padding-bottom: 11px;
+  line-height: 22px;
+}
+.label {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-sub);
+}
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  height: 36px;
+  padding: 0 14px;
+  border-radius: 18px;
+  border: 1px solid var(--color-line);
+  background: #fff;
+  color: var(--color-charcoal);
+  font-size: 13px;
+  white-space: nowrap;
+}
+.chip[aria-pressed="true"] {
+  border-color: var(--color-coral);
+  background: var(--color-coral);
+  font-weight: 700;
+}
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 4px 10px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: 700;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+.badge-sm {
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-size: 11px;
+}
+.badge-peach {
+  background: var(--color-peach);
+  color: var(--color-ink);
+}
+.badge-ok {
+  background: var(--color-ok-bg);
+  color: var(--color-ok);
+}
+.badge-wait {
+  background: var(--color-wait-bg);
+  color: var(--color-wait);
+}
+.badge-end {
+  background: var(--color-end-bg);
+  color: var(--color-end);
+}
+.badge-dusk {
+  background: var(--color-dusk);
+  color: var(--color-mist);
+}
+.badge-required {
+  background: var(--color-required);
+  color: var(--color-charcoal);
+}
+.dropzone {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 18px;
+  border-radius: 14px;
+  border: 2px dashed var(--color-dash);
+  text-align: center;
+}
+.sheet-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: rgba(46, 42, 51, 0.55);
+}
+.sheet {
+  position: fixed;
+  inset-inline: 0;
+  bottom: 0;
+  z-index: 61;
+  margin: 0 auto;
+  width: 100%;
+  max-width: 430px;
+  max-height: 92dvh;
+  display: flex;
+  flex-direction: column;
+  border-radius: 24px 24px 0 0;
+  background: #fff;
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.sheet-handle {
+  width: 40px;
+  height: 4px;
+  border-radius: 2px;
+  background: var(--color-mist);
+  margin: 0 auto;
+}
+.toggle {
+  position: relative;
+  width: 46px;
+  height: 28px;
+  border-radius: 999px;
+  background: #d9d3dc;
+  border: 0;
+  transition: background 150ms ease;
+  flex-shrink: 0;
+}
+.toggle::after {
+  content: "";
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+  transition: transform 150ms ease;
+}
+.toggle[aria-checked="true"] {
+  background: var(--color-coral);
+}
+.toggle[aria-checked="true"]::after {
+  transform: translateX(18px);
+}
+.list-card {
+  background: #fff;
+  border: 1px solid var(--color-line);
+  border-radius: 18px;
+  overflow: hidden;
+}
+.list-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  width: 100%;
+  min-height: 52px;
+  padding: 0 16px;
+  font-size: 15px;
+  text-align: left;
+  background: transparent;
+  border: 0;
+  color: var(--color-charcoal);
+}
+.list-row + .list-row,
+.list-card > li + li {
+  border-top: 1px solid var(--color-line);
+}
+.hide-scrollbar {
+  scrollbar-width: none;
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}

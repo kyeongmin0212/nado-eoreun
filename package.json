@@ -1,0 +1,45 @@
+{
+  "name": "nado-eoreun",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit",
+    "seed:demo": "node scripts/seed-demo.ts",
+    "vapid:generate": "node scripts/generate-vapid.ts",
+    "icons:generate": "node scripts/generate-icons.ts",
+    "smoke:image": "node scripts/smoke-image.ts",
+    "smoke:inputs": "node scripts/smoke-make-inputs.ts"
+  },
+  "dependencies": {
+    "@ai-sdk/openai": "^4.0.104",
+    "@supabase/ssr": "^0.12.7",
+    "@supabase/supabase-js": "^2.118.0",
+    "ai": "^7.0.156",
+    "next": "16.4.3",
+    "nodemailer": "10.0.16",
+    "pg": "^8.23.1",
+    "react": "19.3.0",
+    "react-dom": "19.3.0",
+    "sharp": "^0.35.5",
+    "web-push": "^3.6.7"
+  },
+  "devDependencies": {
+    "@tailwindcss/turbopack": "^4",
+    "@types/node": "^20",
+    "@types/pg": "^8.23.1",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "@types/web-push": "^3.6.4",
+    "dotenv": "^18.0.9",
+    "eslint": "^9",
+    "eslint-config-next": "16.4.3",
+    "tailwindcss": "^4",
+    "typescript": "^5"
+  },
+  "packageManager": "pnpm@10.28.0",
+  "type": "module"
+}

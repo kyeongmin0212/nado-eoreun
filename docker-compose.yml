@@ -1,0 +1,62 @@
+# 주최 측 실행과 CI가 같은 방식으로 실행하는 구성. 빈 DB에서 `docker compose up --build` 만으로
+# 앱·시드 계정(사용자/친구1/친구2)·시드 사진 2장이 뜬다. 키트 docker-compose.example.yml 의 「지킬 것」을 따른다.
+services:
+  app:
+    cpus: 2
+    mem_limit: 4g
+    build:
+      context: .
+      args:
+        # 주최 측 실행과 CI가 실행하는 commit SHA. /__health 의 releaseId 로 응답한다.
+        RELEASE_ID: ${RELEASE_ID:-dev}
+    ports:
+      - "3000:3000"
+    environment:
+      RELEASE_ID: ${RELEASE_ID:-dev}
+      # docker 모드: 컨테이너 Postgres + 앱 세션 + 파일 저장
+      DATA_BACKEND: local
+      NEXT_PUBLIC_DATA_BACKEND: local
+      DATABASE_URL: postgres://app:app@db:5432/app
+      LOCAL_STORAGE_DIR: /data/storage
+      # 채점기는 http 로 접속하므로 세션 쿠키에 Secure 를 붙이지 않는다
+      COOKIE_SECURE: "false"
+      # 시드 계정: 앱이 기동할 때 만드는 로컬 전용 계정. E2E 가 이 계정으로 로그인한다. (배포 사이트 계정과 다름)
+      SEED_USER_EMAIL: user@example.com
+      SEED_USER_PASSWORD: loopthon-2026
+      SEED_USER_NAME: 사용자
+      SEED_FRIEND1_EMAIL: friend1@example.com
+      SEED_FRIEND1_PASSWORD: loopthon-2026
+      SEED_FRIEND1_NAME: 친구1
+      SEED_FRIEND2_EMAIL: friend2@example.com
+      SEED_FRIEND2_PASSWORD: loopthon-2026
+      SEED_FRIEND2_NAME: 친구2
+      # 주최 측 실행이 AI 키를 넣어 이미지 기능이 실제로 호출된다. 키가 비어 있어도 앱은 기동한다(생성만 연결 대기).
+      AI_GATEWAY_API_KEY: ${AI_GATEWAY_API_KEY:-}
+      # 가입 인증번호 메일(선택). 비우면 회원가입은 연결 대기로 막히고 시드 계정 로그인은 그대로 된다.
+      SMTP_HOST: ${SMTP_HOST:-}
+      SMTP_PORT: ${SMTP_PORT:-465}
+      SMTP_SECURE: ${SMTP_SECURE:-}
+      SMTP_USER: ${SMTP_USER:-}
+      SMTP_PASS: ${SMTP_PASS:-}
+      MAIL_FROM: ${MAIL_FROM:-}
+      IMAGE_MODEL_ID: openai/gpt-image-2.5-sunburst
+      IMAGE_QUALITY: low
+    depends_on:
+      db:
+        condition: service_healthy
+  db:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: app
+      POSTGRES_PASSWORD: app
+      POSTGRES_DB: app
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U app -d app"]
+      interval: 3s
+      timeout: 5s
+      retries: 20
+    volumes:
+      - db-data:/var/lib/postgresql/data
+
+volumes:
+  db-data:
